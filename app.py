@@ -1,3 +1,4 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, request
@@ -5,13 +6,13 @@ import openai
 
 app = Flask(__name__)
 
-# Set up OpenAI API key
-openai.api_key = ''
+# Set up OpenAI API key from environment variable
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def analyze_with_chatgpt(text):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Anda bisa mengganti dengan "gpt-3.5-turbo" jika diperlukan
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "Buatkan berita baru dari berita ini menjadi berita yang lebih bagus. Setiap kutipan harus diletakkan pada paragraf yang terpisah, dan narasi sebelum kutipan harus dibuat semenarik mungkin sesuai dengan isi dari kutipan berikutnya. Juga, buatkan 10 hashtag yang relevan di bawah berita."},
                 {"role": "user", "content": text}
@@ -19,7 +20,6 @@ def analyze_with_chatgpt(text):
             max_tokens=1500,
             temperature=0.7
         )
-        
         return response.choices[0].message['content'].strip()
     except Exception as e:
         return f"Error: {str(e)}"
