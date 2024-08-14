@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Scraping App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function copyToClipboard(id) {
+            var text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard!');
+            }).catch(function(err) {
+                alert('Error: ' + err);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Scraping App</h1>
+        <form method="post">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" placeholder="Enter URL here">
+            <button type="submit">Scrape</button>
+        </form>
+        
+        {% if title %}
+            <h2>Title: {{ title }}</h2>
+        {% endif %}
+        
+        {% if article %}
+            <div class="article-section">
+                <h3>Original Article:</h3>
+                <div class="article-box">
+                    <p id="original-article">{{ article }}</p>
+                </div>
+                <button class="copy-button" onclick="copyToClipboard('original-article')">Copy</button>
+            </div>
+        {% endif %}
+        
+        {% if improved_article %}
+            <div class="article-section">
+                <h3>Improved Article:</h3>
+                <div class="article-box">
+                    <p id="improved-article">{{ improved_article }}</p>
+                </div>
+                <button class="copy-button" onclick="copyToClipboard('improved-article')">Copy</button>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
