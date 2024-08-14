@@ -1,12 +1,11 @@
-import os
-import requests
-from bs4 import BeautifulSoup
 from flask import Flask, render_template, request
 import openai
+import requests
+from bs4 import BeautifulSoup
+import os
 
 app = Flask(__name__)
 
-# Set up OpenAI API key from environment variable
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def analyze_with_chatgpt(text):
@@ -37,11 +36,9 @@ def index():
             soup = BeautifulSoup(response.content, 'html.parser')
             title = soup.find('title').get_text() if soup.find('title') else "Title not found"
             
-            # Find the main article content
             article_content = soup.find('article') or soup.find('div', {'class': 'content'}) or soup.find('div', {'class': 'post-content'})
             article = article_content.get_text() if article_content else "Article content not found"
             
-            # Analyze and improve article with ChatGPT
             improved_article = analyze_with_chatgpt(article)
             
         except Exception as e:
